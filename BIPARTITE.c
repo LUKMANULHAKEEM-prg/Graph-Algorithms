@@ -1,117 +1,40 @@
-#include<stdio.h>
-#include<stdlib.h>
+// initially the parent initialised as -1
+// the colour array is the same as the visited array that we usually use in DFS. Instead of giving 1, we assign 1 or 2, which represent two different colour.
 
-struct Node{
-    int val;
-    struct Node*next;
-};
-typedef struct Node node;
+bool Bipartite(int vertices,int A[][vertices],int color[],int source,int parent){
+    if(color[source]){
+        if(color[source]==color[parent])return false;
+        return true;
+    }
 
-struct Graph{
-    int numVertices;
-    node**adjacencyList;
-};
+    color[source]= (parent == -1 || color[parent]==1) ? 2 : 1;
 
-typedef struct Graph Graph;
-
-node*CreateNode(int val){
-    node*newnode=(node*)malloc(sizeof(node));
-    newnode->next=NULL;
-    newnode->val=val;
-    return newnode;
-}
-
-Graph*initialseGraph(int vertices){
-    Graph*g=(Graph*)malloc(sizeof(Graph));
-    g->numVertices=vertices;
-    g->adjacencyList=(node**)malloc(vertices*sizeof(node));
-    for(int i=0;i<vertices;i++)g->adjacencyList[i]=NULL;
-    return g;
-}
-
-void insert(Graph*g,int source,int dest){
-
-    node*newnode1=CreateNode(dest);
-    newnode1->next=g->adjacencyList[source];
-    g->adjacencyList[source]=newnode1;
-
-    node*newnode2=CreateNode(source);
-    newnode2->next=g->adjacencyList[dest];
-    g->adjacencyList[dest]=newnode2;
-
-}
-
-void printGraph(Graph*g){
-    for(int i=0;i<g->numVertices;i++){
-        node*temp=g->adjacencyList[i];
-        while(temp){
-            printf("%d ",temp->val);
-            temp=temp->next;
+    for(int i=0;i<vertices;i++){
+        if(A[source][i] && parent!=i){
+            if(!Bipartite(vertices,A,color,i,source))return false;
         }
     }
+
+    return true;
 }
 
-int CheckForBipartite(Graph*g,int start,int color[],int currentColor){
-    if(color[start]){
-        if(color[start]!=currentColor)return 0;
-        else return 1;
+
+// Code for Bipartite using adjacency List.
+
+/*bool Bipartite(graph*g,int color[],int source,int parent){
+    if(color[source]){
+        if(color[source]==color[parent])return false;
+        return true;
     }
 
-    color[start]=currentColor;
-    node*temp=g->adjacencyList[start];
+    color[source] = (parent == -1 || color[parent]==1) ? 2 : 1;
+
+    node*temp=g->List[source];
     while(temp){
-        int flag=0;
-        if(currentColor==1){
-            flag=CheckForBipartite(g,temp->val,color,2);
-        }
-        else{
-            flag=CheckForBipartite(g,temp->val,color,1);
-        }
-        if(flag==0)return 0; 
+        if(!Bipartite(g,color,temp->val,source))return false;
         temp=temp->next;
     }
-    return 1;
-}
 
-int main(){
-    int vertices;
-    scanf("%d",&vertices);
-    Graph*g=initialseGraph(vertices);
+    return true;
 
-    char ch='i';
-    int source;
-    int dest;
-    int flag=1;
-    int color[vertices];
-
-    do{
-        scanf(" %c",&ch);
-        switch(ch){
-
-            case 'i':
-            scanf("%d",&source);
-            scanf("%d",&dest);
-            insert(g,source,dest);
-            break;
-
-            case 'p':printGraph(g);
-            break;
-
-            case 'b':
-
-            for(int i=0;i<vertices;i++)color[i]=0;
-
-            for(int i=0;i<vertices;i++){
-                if(color[i]==0){
-                    flag=CheckForBipartite(g,i,color,1);
-                    if(!flag)break;
-                }
-            }
-
-            if(flag)printf("bipartite\n");
-            else printf("not bipartite\n");
-            break;
-        }
-    }while(ch!='e');
-    return 0;
-}
+}*/
