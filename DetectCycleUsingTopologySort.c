@@ -5,14 +5,14 @@ int checkForZero(int indegree[],int vertices){
     return -1;
 }
 
-int checkForPositiveInteger(int indegree[],int vertices){
+bool checkForPositiveInteger(int indegree[],int vertices){
     for(int i=0;i<vertices;i++){
-        if(indegree[i]>=1)return 1;
+        if(indegree[i]>=1)return true;
     }
-    return -1;
+    return false;
 }
 
-int topologySort(int vertices,int A[][vertices],int indegree[]){
+bool topologySort(int vertices,int A[][vertices],int indegree[]){
 
     int flag;
     int count;
@@ -27,8 +27,8 @@ int topologySort(int vertices,int A[][vertices],int indegree[]){
             }
             indegree[index]=-1;
         }else {
-            if(checkForPositiveInteger(indegree,vertices))return -1;
-            else return 1;
+            if(checkForPositiveInteger(indegree,vertices))return false;
+            else return true;
         }
     }
 }
